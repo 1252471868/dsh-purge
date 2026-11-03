@@ -1,3 +1,12 @@
+## 1.1.72-macos.1 — macOS compatibility fork (2026-11-03)
+
+- Incremental update of 1252471868/dsh-purge; original prompt assets, presets and skills retained.
+- Preserve executable file modes, fix ASAR extraction/CLI paths, and use a standalone Node restart helper on macOS.
+- Backport rc.2/rc.5 compatibility anchors, fix cwd interpolation, normalize nested tool schemas and register the profile body once.
+- Keep update/download sources on this fork. Add read-only compatibility checks and block unverified versions, including 0.2.2-alpha.3.
+- Validation: unit tests on Node and the app-bundled Node 24.21.0; installed rc.2 ASAR and rc.5 npm source checks; rc.2 prompt rendering, 56 tool schema registrations and isolated profile configuration. Actual GUI/Apply/restart not tested.
+- 中文安装说明、版本证据及借用代码署名见 [macOS compatibility](docs/macos-compatibility.md).
+
 # 1.1.71
 
 ## 中文

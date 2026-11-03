@@ -36,16 +36,30 @@ function printStatus(state) {
 }
 
 async function main() {
-  const mode = args.find((a) => ["--apply", "--revert", "--uninstall", "--status", "--edit", "--help"].includes(a));
+  const mode = args.find((a) => ["--apply", "--revert", "--uninstall", "--status", "--edit", "--check", "--help"].includes(a));
 
   if (mode === "--help" || args.includes("-h")) {
     console.log(`dsh-purge 用法:
   dsh-purge --status     显示状态
+  dsh-purge --check      只读检查 Mac 宿主兼容性，不应用补丁
   dsh-purge --apply      应用全部清洗（提示词+代码+shim+override）
   dsh-purge --revert     回滚还原
   dsh-purge --uninstall  卸载插件（已应用则先还原）
   dsh-purge --edit       编辑注入文件 prompt-inject.md
   dsh-purge --help       帮助`);
+    return;
+  }
+
+  if (mode === "--check") {
+    const { checkCompatibility } = await import("../scripts/check-compat.mjs");
+    const value = (flag) => args.includes(flag) ? args[args.indexOf(flag) + 1] : undefined;
+    const result = await checkCompatibility({
+      app: value("--app") || (!args.includes("--base") && process.platform === "darwin" ? "/Applications/DeepSeek Harness.app" : undefined),
+      base: value("--base"),
+    });
+    delete result.report;
+    console.log(JSON.stringify(result, null, 2));
+    if (!result.ok) process.exitCode = 1;
     return;
   }
 
@@ -72,6 +86,12 @@ async function main() {
     for (const r of report) {
       const m = r.status === "applied" ? "✓ 已清洗" : r.status === "already" ? "- 已是最新" : r.status === "missing_file" ? "⚠ 文件缺失" : `✗ ${r.status}`;
       console.log(`  ${m} patch #${String(r.patch_id).padEnd(2)} ${r.name}`);
+    }
+    const summary = core.summarizeApplyReport(report);
+    if (!hosts.length || summary.failed.length || !core.allPatchHostsWritten(hosts)) {
+      console.error("[ERROR] 补丁未全部完成；未声明应用成功，请检查兼容性报告。");
+      process.exitCode = 1;
+      return;
     }
     const flashHost = hosts[0]?.aiBase || state.ai_base;
     const flash = core.silenceCmdFlash(flashHost);
