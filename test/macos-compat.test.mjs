@@ -11,7 +11,7 @@ import { hostFs, extractAsar, readAsarJson, renameAsarAside } from "../lib/extra
 import { rewritePromptAssembly } from "../lib/identity.js";
 import { sealObjectSchemas } from "../lib/tool-schema.js";
 import { ensureProfileBodyInsert, ensureProfileBundles } from "../lib/profile-insert.js";
-import { versionSupported } from "../lib/compatibility.js";
+import { assertSupportedHost, hostVersion, versionSupported } from "../lib/compatibility.js";
 import { REPO } from "../lib/update.js";
 
 function fixture(t) {
@@ -116,6 +116,20 @@ function writeAsar(file, files, contents = "") {
   header.writeUInt32LE(json.length + 4, 8); header.writeUInt32LE(json.length, 12);
   fs.writeFileSync(file, Buffer.concat([header, json, Buffer.from(contents)]));
 }
+
+test("status and the write guard both prefer the installed archive after a desktop update", (t) => {
+  const dir = fixture(t);
+  const pkg = path.join(dir, "dsh-system-prompt");
+  fs.mkdirSync(pkg);
+  fs.writeFileSync(path.join(pkg, "package.json"), JSON.stringify({ version: "0.2.1-rc.5" }));
+  const asar = path.join(dir, "app.asar");
+  const metadata = JSON.stringify({ version: "0.2.2-rc.5" });
+  writeAsar(asar, { "package.json": { offset: "0", size: Buffer.byteLength(metadata) } }, metadata);
+
+  assert.equal(hostVersion(dir), "0.2.1-rc.5");
+  assert.equal(hostVersion(dir, asar), "0.2.2-rc.5");
+  assert.throws(() => assertSupportedHost({ aiBase: dir, asar }), /0\.2\.2-rc\.5.*0\.2\.1-rc\.2、0\.2\.1-rc\.5/);
+});
 
 test("ASAR extraction preserves executable mode and root-relative links", (t) => {
   const dir = fixture(t); const asar = path.join(dir, "app.asar");

@@ -4,7 +4,7 @@
 
 <h1 align="center">⚔️ DeepSeek Harness 网络安全红队工具（dsh-purge）</h1>
 
-<p align="center"><strong>Version 1.1.72-macos.1</strong></p>
+<p align="center"><strong>Version 1.1.72-macos.2</strong></p>
 
 <p align="center">
   <em>DeepSeek Harness 破甲：让所有模型都能破甲，不同模型可换不同提示词；默认提示词面向国模「小码酱」。Jailbreak for every model — swap prompts per model. 求 Star 收藏 ⭐ 如要二开，请查看署名要求部分</em>
@@ -30,7 +30,7 @@
 </p>
 
 > **这是 1252471868 的 macOS 适配 fork。** 基于 1.1.71 增量修改，保留原提示词、预设和技能；安装与更新源均指向本 fork。
-> 本机 DSH 0.2.1-rc.2 的 Mac 应用源码检查及 rc.5 包源码检查已通过；alpha.3 未适配。实际界面与重启尚未实测。
+> 在 DSH 0.2.2-rc.5 上，此 fork 能显示宿主版本并识别服务端拒答。该版本暂不支持宿主补丁。
 > 从本地 checkout 安装，先阅读 [Mac 安装与验证说明](docs/macos-compatibility.md)。
 
 ## 目录
@@ -156,7 +156,7 @@ Harness 不只是把问题交给模型。它还会在运行时改提示词、审
 
 ## 适配范围
 
-见 [版本验证表](docs/macos-compatibility.md#verified-scope-2026-11-03)。0.2.1-rc.2 和 rc.5 已完成源码级检查；0.2.2-alpha.3 的 Apply 会被拦截。
+宿主补丁已在 0.2.1-rc.2 和 0.2.1-rc.5 的源码上完成检查。对于 0.2.2-alpha.3 和 0.2.2-rc.5，版本检查会阻止写入宿主。见 [11 月 3 日验证记录](docs/macos-compatibility.md#verified-scope-2026-11-03)和 [11 月 18 日更新说明](release-notes.md)。
 
 ## 安装
 

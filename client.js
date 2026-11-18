@@ -185,6 +185,7 @@ window.__ModuleLoader__.load({ id: "dsh-purge", factory: (require) => {
 			"metric.unmatchedShort": "没对上 {n}",
 			"metric.skipShort": "跳过 {n}",
 			"metric.unlocated.count": "—",
+			"metric.hostUnsupported": "此 DSH 版本暂不支持宿主补丁",
 			"metric.shim": "shim",
 			"metric.shim.na": "本端不需要",
 			"metric.bak.yes": "有备份",
@@ -525,6 +526,7 @@ window.__ModuleLoader__.load({ id: "dsh-purge", factory: (require) => {
 			"metric.unmatchedShort": "No match {n}",
 			"metric.skipShort": "Skipped {n}",
 			"metric.unlocated.count": "—",
+			"metric.hostUnsupported": "Host patches are unavailable for this DSH version",
 			"metric.shim": "shim",
 			"metric.shim.na": "Not needed here",
 			"metric.bak.yes": "Backup",
@@ -1824,6 +1826,7 @@ body:not([data-ds-dark-theme]) .dshp-auth-ops button.primary{background:var(--ds
 
 			const s = state;
 			const located = !!(s && s.ai_base);
+			const hostUnsupported = s?.host_patches_supported === false;
 			const hostSurface = hostSurfaceOf(s);
 			const desktopLikely = hostSurface === "desktop" || clientGuessSurface() === "desktop";
 			const sealedReady = !located && desktopLikely && !!(s && (s.asar_still_sealed || s.desktop_exe || s.desktop_install));
@@ -1918,7 +1921,10 @@ body:not([data-ds-dark-theme]) .dshp-auth-ops button.primary{background:var(--ds
 					noticeNode(updateNotice),
 				),
 				s ? h("div", { className: "dshp-metrics" },
-					h("div", { className: "dshp-metric" },
+					hostUnsupported ? h("div", { className: "dshp-metric" },
+						h("b", null, "DSH " + s.host_version),
+						h("span", null, t("metric.hostUnsupported")),
+					) : h("div", { className: "dshp-metric" },
 						h("b", null, located ? (applied + " / " + total) : (patchesLost ? t("metric.lost.count") : (sealedReady ? t("metric.sealed.count") : t("metric.unlocated.count")))),
 						h("span", null, !located ? (patchesLost ? t("metric.lost") : (sealedReady ? t("metric.sealed") : t("metric.unlocated"))) : (metricNotes.length ? metricNotes.join(" · ") : t("metric.purged"))),
 					),
@@ -1945,7 +1951,7 @@ body:not([data-ds-dark-theme]) .dshp-auth-ops button.primary{background:var(--ds
 				h(PatchGroups, { state: s }),
 				h(HooksDenySection, { onSaved: loadAll }),
 				h("div", { className: "dshp-row", style: { marginTop: 14 } },
-					h(Btn, { kind: "primary", disabled: patchBusy || uninstallBusy || !overrideLoaded, onClick: () => doAction("apply", "action.apply") }, patchBusy ? t("btn.apply.busy") : t("btn.apply")),
+					h(Btn, { kind: "primary", disabled: patchBusy || uninstallBusy || !overrideLoaded || hostUnsupported, onClick: () => doAction("apply", "action.apply") }, patchBusy ? t("btn.apply.busy") : t("btn.apply")),
 					h(Btn, { kind: "danger", disabled: patchBusy || uninstallBusy, onClick: () => doAction("revert", "action.revert") }, t("btn.revert")),
 					h(Btn, { kind: "solid-danger", disabled: patchBusy || uninstallBusy, onClick: () => setAskUninstall(true) }, uninstallBusy ? t("btn.uninstall.busy") : t("btn.uninstall")),
 					noticeNode(notice),

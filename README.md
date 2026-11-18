@@ -4,7 +4,7 @@
 
 <h1 align="center">⚔️ DeepSeek Harness cybersecurity red-team tool (dsh-purge)</h1>
 
-<p align="center"><strong>Version 1.1.72-macos.1</strong></p>
+<p align="center"><strong>Version 1.1.72-macos.2</strong></p>
 
 <p align="center">
   <em>DeepSeek Harness jailbreak: every model, swap prompts per model. Default prompt for 小码酱. Please star ⭐ If you build on this, see Attribution required.</em>
@@ -30,7 +30,7 @@
 </p>
 
 > **This is the macOS compatibility fork maintained in 1252471868/dsh-purge.** It incrementally updates 1.1.71 while retaining its original prompts, presets and skills. Installation and updates point to this fork.
-> The installed macOS DSH 0.2.1-rc.2 sources and rc.5 package sources pass compatibility checks; alpha.3 is unsupported. GUI and restart behavior are not yet verified.
+> On DSH 0.2.2-rc.5 the fork reports the host version and recognizes provider refusals. Host patches are unavailable on that release.
 > Install this local checkout using the [Mac installation and validation guide](docs/macos-compatibility.md).
 
 ## Contents
@@ -156,7 +156,7 @@ WeChat name **「老张的ai科技」**, same handle as the live-room viewer boa
 
 ## Supported hosts
 
-See the [version evidence table](docs/macos-compatibility.md#verified-scope-2026-11-03). Source checks cover 0.2.1-rc.2 and rc.5. Apply is blocked on 0.2.2-alpha.3.
+Host patch checks cover 0.2.1-rc.2 and 0.2.1-rc.5. On 0.2.2-alpha.3 and 0.2.2-rc.5, the version guard blocks host writes. See the [November 3 compatibility checks](docs/macos-compatibility.md#verified-scope-2026-11-03) and the [November 18 changes](release-notes.md).
 
 ## Install
 

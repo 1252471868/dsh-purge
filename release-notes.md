@@ -1,3 +1,8 @@
+## 1.1.72-macos.2 — DSH 0.2.2 desktop status and error handling (2026-11-18)
+
+- The desktop panel and `/purge status` show the installed DSH version when host patches are unavailable. The panel disables Apply on those versions, including `0.2.2-rc.5`.
+- A DeepSeek `CONTENT_REFUSED` result ends the turn. Transport interruptions remain eligible for a retry.
+
 ## 1.1.72-macos.1 — macOS compatibility fork (2026-11-03)
 
 - Incremental update of 1252471868/dsh-purge; original prompt assets, presets and skills retained.
